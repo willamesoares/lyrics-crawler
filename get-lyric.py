@@ -6,6 +6,7 @@ import pdb
 TOKEN = 'Kz0wSeMnCT7kgo6jGPltZ9CrsSl2OjRbF8GR4HLX6GayoE07G1GQiciXasFpImGt'
 
 def get_current_song_info():
+    # kudos to jooon at stackoverflow http://stackoverflow.com/a/33923095
     session_bus = dbus.SessionBus()
     spotify_bus = session_bus.get_object("org.mpris.MediaPlayer2.spotify",
                                          "/org/mpris/MediaPlayer2")
