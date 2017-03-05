@@ -1,9 +1,19 @@
-import dbus
+import sys, dbus, requests
 from lxml import html
-import requests
-import pdb
 
-TOKEN = 'Kz0wSeMnCT7kgo6jGPltZ9CrsSl2OjRbF8GR4HLX6GayoE07G1GQiciXasFpImGt'
+defaults = {
+    "request": {
+        "token": 'Kz0wSeMnCT7kgo6jGPltZ9CrsSl2OjRbF8GR4HLX6GayoE07G1GQiciXasFpImGt',
+        "base_url": "https://api.genius.com"
+    },
+    "message": {
+        "search_fail": "The lyrics for this song were not found!",
+        "wrong_input": "Wrong number of arguments.\n" \
+                       "Use two parameters to perform a custom search " \
+                       "or none to get the song currently playing on Spotify."
+    }
+
+}
 
 def get_current_song_info():
     # kudos to jooon at stackoverflow http://stackoverflow.com/a/33923095
@@ -17,8 +27,8 @@ def get_current_song_info():
     return {'artist': metadata['xesam:artist'][0], 'title': metadata['xesam:title']}
 
 def request_song_info(song_title, artist_name):
-    base_url = "https://api.genius.com"
-    headers = {'Authorization': 'Bearer ' + TOKEN}
+    base_url = defaults["request"]["base_url"]
+    headers = {'Authorization': 'Bearer ' + defaults["request"]["token"]}
     search_url = base_url + "/search"
     data = {'q': song_title + ' ' + artist_name}
     response = requests.get(search_url, data=data, headers=headers)
@@ -34,10 +44,20 @@ def scrap_song_url(url):
     return lyrics
 
 def main():
-    # Get info about song currently playing on Spotify
-    current_song_info = get_current_song_info()
-    song_title = current_song_info["title"]
-    artist_name = current_song_info["artist"]
+    args_length = len(sys.argv)
+
+    if args_length == 1:
+        # Get info about song currently playing on Spotify
+        current_song_info = get_current_song_info()
+        song_title = current_song_info["title"]
+        artist_name = current_song_info["artist"]
+    elif args_length == 3:
+        # Use input as song title and artist name
+        song_info = sys.argv
+        song_title, artist_name = song_info[1], song_info[2]
+    else:
+        print(defaults["message"]["wrong_input"])
+        return
 
     print('{} by {}'.format(song_title, artist_name))
 
@@ -57,7 +77,7 @@ def main():
         lyrics = scrap_song_url(song_url)
         print("\n".join(lyrics))
     else:
-        print("The lyrics for this song were not found!")
+        print(defaults["message"]["search_fail"])
 
 if __name__ == '__main__':
     main()
