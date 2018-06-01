@@ -1,9 +1,12 @@
 import sys, dbus, requests
 from bs4 import BeautifulSoup
+from constants import (
+    TOKEN
+)
 
 defaults = {
     'request': {
-        'token': '',
+        'token': TOKEN,
         'base_url': 'https://api.genius.com'
     },
     'message': {
@@ -13,10 +16,6 @@ defaults = {
                        'or none to get the song currently playing on Spotify.'
     }
 }
-
-def get_token():
-    f = open('token.txt', 'r')
-    defaults['request']['token'] = f.readline().rstrip()
 
 def get_current_song_info():
     # kudos to jooon at stackoverflow http://stackoverflow.com/a/33923095
@@ -48,9 +47,6 @@ def scrap_song_url(url):
 
 def main():
     args_length = len(sys.argv)
-
-    get_token()
-
     if args_length == 1:
         # Get info about song currently playing on Spotify
         current_song_info = get_current_song_info()
