@@ -1,4 +1,6 @@
 # lyrics-crawler
+[![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/willamesoares)
+
 Get the lyrics for the song currently playing on Spotify or search for any song passing its title and artist name in the command line.
 
 ### Setup
